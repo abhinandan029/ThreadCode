@@ -1,14 +1,33 @@
+import {useNavigate} from 'react-router-dom'
+import {useState} from 'react'
+
 import '../styles/Home.css'
 
-import Chats from './Chats.jsx'
+function Home( {createRoom, activeRoom} ){
 
-function Home(){
+  const navigate = useNavigate();
+
+  const [copied, setCopied] = useState(false);
+
+   function  copyCode(){
+    navigator.clipboard.writeText(activeRoom.roomId);
+    setCopied(true);
+  }
+
 
   return(
     <div className="home-page">
-      <Chats />
+      <button onClick={() => {
+        createRoom();
+        setCopied(false);
+      }}>Create Room</button>
+      
+      {activeRoom.roomId ? 
+        (<div id="room-id">{activeRoom.roomId} <button onClick={() => copyCode()}>{copied ? "copied" : "copy"}</button></div>) : 
+        <p>Generate room ID by clicking Create Room</p>
+      }
     </div>
-  );
+  );        
 }
 
 export default Home
