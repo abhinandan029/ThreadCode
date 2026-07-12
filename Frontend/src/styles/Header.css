@@ -32,10 +32,17 @@ h1{
   padding : 5px;
   border-radius : 50%;
   margin-right : 20px;
+  transition : 0.3s ease-in-out;
 }
 
 #user-profile{
   font-size : 30px;
-  color : black;
+  color : hsl(240, 100%, 20%);
   margin-right: 10px;
+}
+
+#profile-box button:hover {
+  background-color : white;
+  color : black;
+  transform : scale(1.15);
 }

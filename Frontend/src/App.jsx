@@ -1,33 +1,40 @@
 import Header from './pages/Header'
 import Sidebar from './pages/Sidebar'
 import Home from './pages/Home'
+import Chats from './pages/Chats.jsx'
 
+import { Routes, Route} from 'react-router-dom'
 import {useEffect, useState} from 'react'
-import axios from 'axios'
+
 
 import './index.css'
 
 
 function App() {
-  const [header, setHeader] =  useState("Hello");
 
-  useEffect(() => {
-    axios.get("/threadcode/hello")
-    .then((res) => {
-      setHeader(res.data);
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  });
+  // useEffect(() => {
+  //   axios.get("/threadcode/hello")
+  //   .then((res) => {
+  //     setHeader(res.data);
+  //   })
+  //   .catch((error) => {
+  //     console.log(error)
+  //   })
+  // });
   
   return(
     <>
       <Header /> 
       <div className="main-box">
         <Sidebar />
-        <h1 id="head">{header}</h1>
-        <Home />
+        <Routes>
+
+          <Route path="/home" element={<Home />}></Route>
+          <Route path="/chats" element={<Chats />}></Route>
+          {/* <Route path="/projects" element={<Projects />}></Route>
+          <Route path="/settings" element={<settings />}></Route> */}
+
+        </Routes>
       </div>
       
     </>
