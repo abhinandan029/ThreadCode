@@ -1,33 +1,38 @@
-import {useNavigate} from 'react-router-dom'
-import {useState} from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { generateRoom } from '../hooks/useRoom.jsx';
+import '../styles/Home.css';
 
-import '../styles/Home.css'
-
-function Home( {createRoom, activeRoom} ){
-
+function Home() {
   const navigate = useNavigate();
-
+  const [room, setRoom] = useState(null);
   const [copied, setCopied] = useState(false);
 
-   function  copyCode(){
-    navigator.clipboard.writeText(activeRoom.roomId);
+  function handleCreate() {
+    setRoom(generateRoom());
+    setCopied(false);
+  }
+
+  function copyCode() {
+    navigator.clipboard.writeText(room.roomId);
     setCopied(true);
   }
 
-
-  return(
+  return (
     <div className="home-page">
-      <button onClick={() => {
-        createRoom();
-        setCopied(false);
-      }}>Create Room</button>
-      
-      {activeRoom.roomId ? 
-        (<div id="room-id">{activeRoom.roomId} <button onClick={() => navigate(`/room/${activeRoom.roomId}`)}>Join</button></div>) : 
+      <button onClick={handleCreate}>Create Room</button>
+
+      {room ? (
+        <div id="room-id">
+          {room.roomId}
+          <button onClick={copyCode}>{copied ? 'Copied!' : 'Copy'}</button>
+          <button onClick={() => navigate(`/room/${room.roomId}`)}>Join</button>
+        </div>
+      ) : (
         <p>Generate room ID by clicking Create Room</p>
-      }
+      )}
     </div>
-  );        
+  );
 }
 
-export default Home
+export default Home;

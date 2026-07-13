@@ -1,27 +1,26 @@
-import express from 'express'
-import db from './utils/database.js'
+import express from 'express';
+import { Server } from '@hocuspocus/server';
+import db from './utils/database.js';
 
 const app = express();
 
-app.get("/threadcode/chat", (req, res) =>{
-  
-  db.execute('SELECT * FROM contacts')
-  .then(([rows]) => {
-    console.log("querry executed");
-    res.json(rows)  
-  })
-  .catch((error) =>{
-    console.log(error);
-  });
+// --- your existing REST route stays as-is ---
+// app.get("/threadcode/chat", (req, res) => {
+//   db.execute('SELECT * FROM contacts')
+//     .then(([rows]) => {
+//       console.log("query executed");
+//       res.json(rows);
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+// });
 
-})
+const hocuspocus = new Server({
+  port: process.env.PORT || 3000,
+  onConnect: async (data) => {
+    console.log(`Client connected to room: ${data.documentName}`);
+  },
+});
 
-
-
-
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () =>{
-  console.log(`Server statrted at address ${PORT}.`)
-})
+hocuspocus.listen();

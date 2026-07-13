@@ -1,19 +1,37 @@
-import {nanoid} from 'nanoid'
-import {useState} from 'react'
+import { nanoid } from 'nanoid';
+import { useState, useEffect } from 'react';
+import * as Y from 'yjs';
+import { HocuspocusProvider } from '@hocuspocus/provider';
 
-export function useRoom(){
-  
-  const [activeRoom, setActiveRoom] = useState({});
+export function useRoom(roomId) {
+  const [ydoc, setYdoc] = useState(null);
+  const [provider, setProvider] = useState(null);
 
-  function createRoom(){
-    const room = {
-      roomId : nanoid(12),
-      roomName : "untitled" 
-    }
+  useEffect(() => {
+    if (!roomId) return;
 
-    setActiveRoom(room);
-    return room;
-  }
- 
-  return { createRoom, activeRoom};
+    const doc = new Y.Doc();
+    const wsProvider = new HocuspocusProvider({
+      url: import.meta.env.VITE_WS_URL,
+      name: roomId,
+      document: doc,
+    });
+
+    setYdoc(doc);
+    setProvider(wsProvider);
+
+    return () => {
+      wsProvider.destroy();
+      doc.destroy();
+    };
+  }, [roomId]);
+
+  return { ydoc, provider };
+}
+
+export function generateRoom() {
+  return {
+    roomId: nanoid(12),
+    roomName: 'untitled',
+  };
 }

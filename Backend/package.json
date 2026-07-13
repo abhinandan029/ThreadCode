@@ -10,7 +10,10 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "@hocuspocus/provider": "^4.3.0",
+    "@hocuspocus/server": "^4.3.0",
     "express": "^5.2.1",
-    "mysql2": "^3.22.6"
+    "mysql2": "^3.22.6",
+    "ws": "^8.21.0"
   }
 }
