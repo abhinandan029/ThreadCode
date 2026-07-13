@@ -18,7 +18,16 @@ function Chats(){
   // }, []);
 
   return(
-    <div className="chat">
+    <div className="flex flex-row w-full h-full">
+      
+      <div className="basis-1/3 bg-gray-700 flex flex-col items-center text-white">
+        contacts
+      </div>
+
+      <div className="basis-2/3 bg-gray-500 flex flex-col items-center text-white">
+        chat box
+      </div>
+
     </div>
   );
 }

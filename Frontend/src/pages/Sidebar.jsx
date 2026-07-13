@@ -1,23 +1,28 @@
-import '../styles/Sidebar.css'
+
 
 import {useNavigate, useLocation, useParams} from 'react-router-dom'
 import { MdHome, MdCommit, MdChat, MdSettings } from "react-icons/md";
 import { FaSlideshare } from "react-icons/fa6";
 
-function Sidebar({roomId}){
+function Sidebar(){
+  const {roomId} = useParams();
   
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const isActive = (path) => location.pathname === path ? "active-path" : "";
 
   return (
-    <div className="sidebar">
-      <button id={isActive(location.pathname === "/home" ? "/home" : "/")}  onClick={() => navigate("/home")}><MdHome /></button>
-      <button id={isActive(`/room/${roomId}`)} onClick={() => navigate(`/room/${activeRoom.roomId}`)}><FaSlideshare /></button>
-      <button id={isActive('/projects')} onClick={() => navigate("/projects")}><MdCommit /></button>
-      <button id={isActive('/chats')} onClick={() => navigate("/chats")}><MdChat /></button>
-      <button id={isActive('/settings')} onClick={() => navigate("/settings")}><MdSettings /></button>
+    <div className="flex flex-col text-[30px] pt-4  bg-gray-900 h-full px-3">
+      
+      <button className="buttons" onClick={() => navigate("/home")}><MdHome /></button>
+
+      <button className="buttons" onClick={() => navigate(`./room/${roomId}`)}><FaSlideshare /></button>
+
+      <button className="buttons" onClick={() => navigate("/chats")}><MdChat /></button>
+      
+      <button className="buttons" onClick={() => navigate("/projects")}><MdCommit /></button>
+      
+      <button className="buttons" onClick={() => navigate("/settings")}><MdSettings /></button>
+
     </div>
   );
 }

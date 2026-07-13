@@ -4,7 +4,6 @@ import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { yCollab } from 'y-codemirror.next';
 import { useRoom } from '../hooks/useRoom.jsx';
-import '../styles/Room.css';
 
 function Room() {
   const { roomId } = useParams();
@@ -29,26 +28,33 @@ function Room() {
   }
 
   return (
-    <div className="room">
-      <p>{`Room Id : ${roomId}`}</p>
-      <CodeMirror
-        id="code-block"
-        height="600px"
-        width="1000px"
-        extensions={[javascript(), yCollab(ytext, provider.awareness)]}
-        theme="light"
-        basicSetup={{
-          lineNumbers: true,
-          foldGutter: false,
-          highlightActiveLine: true,
-          highlightActiveLineGutter: true,
-          autocompletion: true,
-          bracketMatching: true,
-          closeBrackets: true,
-          indentOnInput: true,
-          tabSize: 2,
-        }}
-      />
+    <div className="flex bg-gray-500 w-full">
+      
+      <div className="flex flex-col items-center basis-2/3 ml-5">
+        <p className="text-white p-3 ">{`Room Id : ${roomId}`}</p>
+        <CodeMirror className="flex flex-col p-2"
+          id="code-block"
+          height="700px"
+          width="900px"
+          extensions={[javascript(), yCollab(ytext, provider.awareness)]}
+          theme="light"
+          basicSetup={{
+            lineNumbers: true,
+            foldGutter: false,
+            highlightActiveLine: true,
+            highlightActiveLineGutter: true,
+            autocompletion: true,
+            bracketMatching: true,
+            closeBrackets: true,
+            indentOnInput: true,
+            tabSize: 2,
+          }}
+        />
+      </div>
+      
+      <div className="flex flex-col bg-white m-15 rounded-lg items-center basis-1/3 ">
+          chat
+      </div>
     </div>
   );
 }
