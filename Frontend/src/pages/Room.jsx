@@ -1,4 +1,4 @@
-import {useParams} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import {useState} from 'react'
 
 import CodeMirror from '@uiw/react-codemirror'
@@ -9,8 +9,10 @@ import { FaSlideshare } from "react-icons/fa6";
 import '../styles/Room.css'
 
 function Room({activeRoom}){
+  const navigate = useNavigate();
 
-//   const [code, setCode] = useState("");
+
+  const [code, setCode] = useState("");
 
 //   const customTheme = EditorView.theme({
 //   '&': {
@@ -35,29 +37,39 @@ function Room({activeRoom}){
 
   return (
     <div className="room">
-      {/* <p>{`Room Id : ${activeRoom.roomId}`}</p>
-      <CodeMirror 
-        id="code-block"
-        value={code}
-        height="600px"
-        width="1000px"
-        extensions = { [javascript()]}
-        theme="light"
-        onChange={() => setCode(value)}
 
-        basicSetup={{
-          lineNumbers: true,
-          foldGutter: true,          // collapsible code blocks
-          highlightActiveLine: true,  // highlights the line your cursor is on
-          highlightActiveLineGutter: true,
-          autocompletion: true,
-          bracketMatching: true,
-          closeBrackets: true,        // auto-closes ( [ {
-          indentOnInput: true,
-          tabSize: 2,
-        }}
+      {
+        activeRoom.roomId ? 
+        <>
+          <p>{`Room Id : ${activeRoom.roomId}`}</p>
+          <CodeMirror 
+          id="code-block"
+          value={code}
+          height="600px"
+          width="1000px"
+          extensions = { [javascript()]}
+          theme="light"
+          onChange={() => setCode(value)}
 
-      /> */}
+          basicSetup={{
+            lineNumbers: true,
+            foldGutter: false,          // collapsible code blocks
+            highlightActiveLine: true,  // highlights the line your cursor is on
+            highlightActiveLineGutter: true,
+            autocompletion: true,
+            bracketMatching: true,
+            closeBrackets: true,        // auto-closes ( [ {
+            indentOnInput: true,
+            tabSize: 2,
+          }}
+
+          />
+        </>:
+        <>
+          <button onClick={() => navigate(`/home`)}>create</button>
+        </>
+        
+      }
       
     </div>
   );

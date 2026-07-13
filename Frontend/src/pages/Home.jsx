@@ -23,7 +23,7 @@ function Home( {createRoom, activeRoom} ){
       }}>Create Room</button>
       
       {activeRoom.roomId ? 
-        (<div id="room-id">{activeRoom.roomId} <button onClick={() => copyCode()}>{copied ? "copied" : "copy"}</button></div>) : 
+        (<div id="room-id">{activeRoom.roomId} <button onClick={() => navigate(`/room/${activeRoom.roomId}`)}>Join</button></div>) : 
         <p>Generate room ID by clicking Create Room</p>
       }
     </div>

@@ -23,12 +23,12 @@ function App() {
     <>
       <Header /> 
       <div className="main-box">
-        <Sidebar />
+        <Sidebar activeRoom={activeRoom}/>
         <Routes>
 
           <Route path="/" element={<Home createRoom={createRoom} activeRoom={activeRoom}/>}></Route>       /*Default Page*/
           <Route path="/home" element={<Home createRoom={createRoom} activeRoom={activeRoom}/>}></Route>
-          <Route path="/room" element={<Room activeRoom={activeRoom}/>}></Route>
+          <Route path="/room/:roomId" element={<Room activeRoom={activeRoom}/>}></Route>
           {/* <Route path="/chats" element={<Chats />}></Route> */}
           {/* <Route path="/projects" element={<Projects />}></Route>
           <Route path="/settings" element={<settings />}></Route> */}
