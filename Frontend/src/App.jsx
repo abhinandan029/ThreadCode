@@ -1,5 +1,4 @@
 import Header from './pages/Header'
-import Sidebar from './pages/Sidebar'
 import Home from './pages/Home'
 import Room from './pages/Room'
 import Chats from './pages/Chats'
@@ -11,7 +10,6 @@ function App() {
     <>
       <Header />
       <div className="flex flex-1 bg-white; h-full">
-        <Sidebar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
