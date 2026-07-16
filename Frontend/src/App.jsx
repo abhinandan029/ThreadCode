@@ -1,7 +1,9 @@
-import Header from './pages/Header'
+import Header from './components/Header'
 import Home from './pages/Home'
 import Room from './pages/Room'
 import Chats from './pages/Chats'
+
+import CreateContact from './forms/createContact.jsx'
 
 import { Routes, Route } from 'react-router-dom'
 
@@ -15,6 +17,8 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/room/:roomId" element={<Room />} />
           <Route path="/chats" element={<Chats />} />
+
+          <Route path="/create-contact" element={<CreateContact />}></Route>
         </Routes>
       </div>
     </>
