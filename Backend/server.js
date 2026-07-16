@@ -2,30 +2,18 @@ import express from 'express';
 import { Server } from '@hocuspocus/server';
 import db from './utils/database.js';
 
+import contactsRouter from './routers/contactsRouter.js'
+import chatsRouter from './routers/chatsRouter.js'
 const app = express();
+app.use(express.json());
+
 
 // --- your existing REST route stays as-is ---
-app.get("/api/home/contacts", (req, res) => {
-  db.execute('SELECT * FROM contacts')
-    .then(([rows]) => {
-      console.log("query executed");
-      res.json(rows);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
+// ---- API releated to Contacts ------ 
+app.use(contactsRouter);
 
-app.get("/api/chats", (req, res) => {
-  db.execute('SELECT * FROM contacts')
-    .then(([rows]) => {
-      console.log("query executed");
-      res.json(rows);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
+// ---- API releated to chats ------ 
+app.use(chatsRouter);
 
 const PORT = 3000 ; 
 app.listen(PORT, () => {
