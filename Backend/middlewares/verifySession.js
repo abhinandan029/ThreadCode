@@ -3,7 +3,7 @@ import {findSession} from '../models/sessions.js'
 import {findUserById} from '../models/users.js'
 
 export async function verifySession(req, res, next){
-  const cookies = parseCookie(req.headers.cookie);
+  const cookies = cookieParser(req.headers.cookie);
   const sessionId = cookies.sessionId;
 
   if(!sessionId){

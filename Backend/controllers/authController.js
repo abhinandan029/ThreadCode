@@ -62,3 +62,16 @@ export async function login(req, res){
     res.status(500).json({error : "Login Failed"});
   }
 }
+
+export async function logout(req, res){
+  const cookies = cookieParser(req.headers.cookie);
+
+  if(cookies.sessionId) await deleteSession(cookies.sessionId);
+
+  res.clearCookie('sessionId');
+  res.json({ message : "Logged out"});
+}
+
+export async function me(req, res){
+  res.json({ user : req.user});
+}
