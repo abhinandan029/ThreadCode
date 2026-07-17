@@ -2,42 +2,59 @@ import {useNavigate, useParams} from 'react-router-dom'
 import { useState } from 'react';
 
 import { generateRoom } from '../hooks/useRoom.jsx';
+import {useAuth} from "../context/authContext"
 
-import { FaCode, FaBell, FaUserLarge} from "react-icons/fa6";
+import { FaCode, FaBell} from "react-icons/fa6";
 
 function Header(){
 
+  const {user, loading, logout } = useAuth();
   const navigate = useNavigate();
   const {roomId} = useParams();
 
   return (
-    <div className="flex width-full items-center justify-between px-1 bg-gray-950 text-[30px]">
+    <div className="flex width-full items-center justify-between px-1 bg-primary-bg text-[30px]">
       
-      <div className="flex width-full items-center p-2 bg-gray-950 text-[30px]">
-        <FaCode className="text-[30px] text-amber-400" /> 
+      <div className="flex width-full items-center justify-center p-2 text-[30px]">
+        <FaCode className="text-[30px] text-amber-500" /> 
         <h1 className="font-medium ml-2 text-white">ThreadCode</h1>
-      </div>
-      
+    
+        {
+          !loading && user && (
+          <>
+            <button 
+            className="text-secondary-text text-[18px] ml-10 mt-2 hover:bg-button px-2 rounded-sm cursor-pointer transition-all duration-300 ease-in-out" 
+            onClick={() => navigate("/home")}>
+              Home
+            </button>
 
-      <div className="flex text-[20px] pt-4 items-center justify-center px-3 ">
-      
-        <button className="buttons" onClick={() => navigate("/home")}>Home</button>
-
-        <button className="buttons" onClick={() => navigate(`./room/${roomId}`)}>Room</button>
-
-        <button className="buttons" onClick={() => navigate("/chats")}>Chats</button>
+            <button 
+              className="text-secondary-text text-[18px] ml-5 mt-2 hover:bg-button px-2 rounded-sm cursor-pointer transition-all duration-300 ease-in-out"
+              onClick={() => navigate(`./room/${roomId}`)}>
+               Room
+            </button>
+          </>
+        )}
         
-        <button  className="buttons" onClick={() => navigate("/projects")}>Projects</button>
-        
-        <button  className="buttons" onClick={() => navigate("/settings")}>Settings</button>
-
       </div>
 
       <div className="text-[30px] flex items-center justify-center">
-        
-        <button className="text-xl text-white cursor-pointer mr-5 hover:scale-[1.1] transition-all duration-300 ease-in-out"><FaBell /></button>
 
-        <FaUserLarge className="mr-2 ml-3 text-red-200 cursor-pointer"/>
+        {
+          !loading && user && (
+          <>
+            <button className="text-xl text-secondary-text cursor-pointer mr-5 hover:scale-[1.1] hover:text-white transition-all duration-300 ease-in-out"><FaBell /></button>
+
+            <button 
+            className="text-secondary-text text-[18px] bg-amber-800 hover:scale-[1.05] px-2 py-1 mr-2 rounded-sm cursor-pointer transition-all duration-300 ease-in-out"
+            onClick={async () => {
+                await logout(); 
+                navigate("/")
+              }}>
+              Logout
+            </button>
+          </>
+        )}
 
       </div>
 

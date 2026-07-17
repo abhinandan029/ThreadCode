@@ -2,26 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { generateRoom } from '../hooks/useRoom.jsx';
 
+import { FaRegCopy } from "react-icons/fa6";
+
 function Home() {
   const navigate = useNavigate();
   const [room, setRoom] = useState(null);
   const [copied, setCopied] = useState(false);
-
-
-  const [contacts, setContacts] = useState([]);
-  useEffect(() => {
-    fetch("/api/home/contacts")
-    .then((res) => {
-      return res.json();
-    })
-    .then((data) => {
-      console.log(data);
-      setContacts(data);
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  }, [])
 
   function handleCreate() {
     setRoom(generateRoom());
@@ -29,51 +15,49 @@ function Home() {
   }
 
   function copyCode() {
-    navigator.clipboard.writeText(room.roomId);
+    navigator.clipboard.writeText(`http://localhost:5173/room/${room.roomId}`);
     setCopied(true);
   }
 
   return (
-    <div className="bg-gray-700 flex flex-1 flex-col">
-      <div className="flex justify-between basis-1/2">
+    <div className="bg-linear-to-b from-secondary-bg to-amber-900 from-30% flex flex-1 flex-col items-center justify-center">
+      <h1 className="text-[50px] font-medium text-white" >Code Together, In Real Time</h1>
+      <p className="text-secondary-text text-[20px] mb-5"> Create a room and share the link to start collaborating</p>
 
-        <div className="bg-gray-300 m-2 mr-0 rounded-sm p-2 flex flex-col basis-2/3 ">
-          
-          <div className="flex items-center justify-between p-1 mb-2" >
-            <p className="text-[20px]">Contacts</p>
-            <button className="px-2 py-1 rounded-md text-[16px] bg-gray-800 text-white hover:scale-[1.05] cursor-pointer hover:bg-gray-900 transition-all duration-300 ease-in-out " onClick={() => navigate('/create-contact')}>Add Contacts</button>
-          </div>
+      <div className="flex justify-between">
+        <button 
+        className="m-5 bg-amber-700 px-2 py-1 text-[28px] rounded-md hover:scale-[1.05] transition-all duration-300 ease-in-out cursor-pointer"
+        onClick={() => handleCreate()}>
+          Create Room
+        </button>
 
-          {
-            contacts.length > 0 ?
-              contacts.map((contact) => 
-              <div key={contact.contact_id} className="border w-full justify-self-start text-[18px] mb-1 hover:bg-gray-500 rounded-md cursor-pointer">
-                <p className="ml-5 text-[24px]">{contact.contact_name}</p>
-              </div>):
-              
-            <div className="self-center flex flex-col justify-center  items-center w-full h-full">
-              <p className="text-[20px] text-red-900">There are no contacts !!!</p>
-            </div>     
-          }
-        </div>
+        <button 
+        className="m-5 border border-amber-500 px-2 py-1 text-[28px] rounded-md text-amber-500 hover:scale-[1.05] transition-all duration-300 ease-in-out cursor-pointer"
+        onClick={() => navigate(`/room/${room.roomId}`)}>
+          Join Room
+        </button>
 
-        <div className="flex items-center justify-center bg-gray-300 border border-black flex-col basis-1/3 m-2 rounded-sm" >
-          {room ? (
-          <div className="flex justify-between items-center bg-white p-5 rounded-md">
-            <div className="mr-2 border rounded-md p-2 text-[18px]">{room.roomId}</div>
-            <button className="p-1 px-3 rounded-md text-[20px] bg-gray-800 text-white hover:scale-[1.05] cursor-pointer hover:bg-gray-900 transition-all duration-300 ease-in-out" onClick={() => navigate(`/room/${room.roomId}`)}>Join</button>
-          </div>
-          ) : (
-            <button className="px-2 py-1 rounded-md text-[20px] bg-gray-800 text-white hover:scale-[1.05] cursor-pointer hover:bg-gray-900 transition-all duration-300 ease-in-out" onClick={handleCreate}>Create Room</button>
-          )}
-          
-        </div>
-      
       </div>
+
+      {
+        room ?
+        <div className="flex flex-col items-center justify-center">
+          <div 
+          className="bg-black/20  border-black px-5 py-2  rounded-lg m-5 transition-all duration-300 ease-in-out flex items-center justify-between mb-0">
+            <p className="text-white text-[22px]">Room ID : {room.roomId}</p>
+            <FaRegCopy 
+              title="copy code"
+              className="ml-10 bg-ternary-bg p-1 rounded-sm flex items-center text-white scale-[2] hover:scale-[2.1] cursor-pointer transition-all duration-300 ease-in-out"
+              onClick={() => copyCode()}
+            />
+          </div>
+          {copied ? <p className="text-white transition-all duration-300 ease-in-out  ">copied</p> : ""}
+        </div> :
+        
+        <div></div>
+      }
+
       
-      <div className="basis-1/2 bg-gray-300 m-2 mt-0 rounded-md p-2 flex items-center justify-center" >
-          call loggs
-      </div>
       
     </div>
   );
