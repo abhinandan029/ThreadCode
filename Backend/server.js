@@ -2,18 +2,12 @@ import express from 'express';
 import { Server } from '@hocuspocus/server';
 import db from './utils/database.js';
 
-import contactsRouter from './routers/contactsRouter.js'
-import chatsRouter from './routers/chatsRouter.js'
+import authRouter from "./routes/auth.js"
+
 const app = express();
 app.use(express.json());
 
-
-// --- your existing REST route stays as-is ---
-// ---- API releated to Contacts ------ 
-app.use(contactsRouter);
-
-// ---- API releated to chats ------ 
-app.use(chatsRouter);
+app.use(authRouter);
 
 const PORT = 3000 ; 
 app.listen(PORT, () => {
