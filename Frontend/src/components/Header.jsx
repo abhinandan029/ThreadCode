@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from 'react-router-dom'
+import {useNavigate, useParams, useLocation} from 'react-router-dom'
 import { useState } from 'react';
 
 import { generateRoom } from '../hooks/useRoom.jsx';
@@ -10,6 +10,7 @@ function Header(){
 
   const {user, loading, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const {roomId} = useParams();
 
   return (
@@ -21,19 +22,19 @@ function Header(){
     
         {
           !loading && user && (
-          <>
+          <div className ="flex justify-between ml-10 mt-1">
             <button 
-            className="text-secondary-text text-[18px] ml-10 mt-2 hover:bg-button px-2 rounded-sm cursor-pointer transition-all duration-300 ease-in-out" 
+            className={location.pathname === "/home" ? "active-page" : "inactive-page"}
             onClick={() => navigate("/home")}>
               Home
             </button>
 
             <button 
-              className="text-secondary-text text-[18px] ml-5 mt-2 hover:bg-button px-2 rounded-sm cursor-pointer transition-all duration-300 ease-in-out"
-              onClick={() => navigate(`./room/${roomId}`)}>
+              className={location.pathname === "/room" ? "active-page" : "inactive-page"}
+              onClick={() => navigate(roomId ? `./room/${roomId}` : "/room")}>
                Room
             </button>
-          </>
+          </div>
         )}
         
       </div>

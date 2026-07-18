@@ -15,7 +15,7 @@ function Home() {
   }
 
   function copyCode() {
-    navigator.clipboard.writeText(`http://localhost:5173/room/${room.roomId}`);
+    navigator.clipboard.writeText(room.roomId);
     setCopied(true);
   }
 
@@ -33,7 +33,7 @@ function Home() {
 
         <button 
         className="m-5 border border-amber-500 px-2 py-1 text-[28px] rounded-md text-amber-500 hover:scale-[1.05] transition-all duration-300 ease-in-out cursor-pointer"
-        onClick={() => navigate(`/room/${room.roomId}`)}>
+        onClick={() => navigate(room === null ? "/room" : `/room/${room.roomId}`)}>
           Join Room
         </button>
 
