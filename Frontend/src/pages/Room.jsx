@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useMemo, useState} from 'react';
 
 import CodeMirror from '@uiw/react-codemirror';
+import { EditorView} from "@codemirror/view"
 
 import { javascript } from '@codemirror/lang-javascript';
 import { yCollab } from 'y-codemirror.next';
@@ -51,6 +52,10 @@ function Room() {
   //   return <div className="room">Connecting to room...</div>;
   // }
 
+  const fixedHeightEditor = EditorView.theme({
+  ".cm-scroller": {overflow: "auto"}
+})
+
   if(!roomId){
     return (
       <div className="bg-linear-to-b from-secondary-bg to-amber-900 from-30% flex flex-1 flex-col items-center">
@@ -86,20 +91,55 @@ function Room() {
   } 
   
   return(
-    <div className="flex bg-secondary-bg w-full h-full">
+    <div className="flex bg-linear-to-b from-secondary-bg to-amber-900 from-30% w-full h-full">
 
-      <div className="basis-2/3 m-2 bg-ternary-bg rounded-md">
+      <div className="basis-2/3 m-2 bg-black/50 rounded-md">
+        
+        <div className="flex items-center justify-between px-2 w-full h-1/20 bg-black overflow-hidden rounded-t-md ">
+          <p className="text-amber-700 font-medium">{"</>"} Code Editor</p>
+          
+        </div>
 
+        <div className="h-19/20 w-full rounded-b-md">
+        <CodeMirror
+          id="code-block"
+          extensions={[javascript()]}
+          theme="light"
+          basicSetup={{
+            lineNumbers: true,
+            foldGutter: false,
+            highlightActiveLine: true,
+            highlightActiveLineGutter: true,
+            autocompletion: true,
+            bracketMatching: true,
+            closeBrackets: true,
+            indentOnInput: true,
+            tabSize: 2,
+          }}
+        />
+        </div>
       </div>
 
       <div className="flex flex-col basis-1/3 m-1">
           
-        <div className="basis-2/3 m-1 bg-white/50 rounded-md">
+        <div className=" flex flex-col basis-2/3 m-1 bg-black/60 rounded-md">
+         
+          <div className="flex items-center justify-between px-2 w-full h-1/10 bg-black overflow-hidden rounded-t-md">
+            <p className="text-amber-700 font-medium">Room Chat</p>
+            <div className="p-2 bg-white/40 rounded-md">members</div>
+          </div>
 
         </div>
 
-        <div className="basis-1/3 m-1 bg-white/50 rounded-md">
-
+        <div className="basis-1/3 m-1 bg-black/50 rounded-md font-mono">
+          
+          <div className="flex items-center justify-between px-2 w-full h-1/6 bg-black overflow-hidden rounded-t-md">
+            <p className="text-amber-700 font-medium">OUTPUT</p>
+          </div>
+          
+          <p className="w-full h-5/6 py-2 text-green-400 rounded-b-md">
+            <p className="inline-block px-2">{">"}</p>Hello World!!
+          </p>
         </div>
 
       </div>

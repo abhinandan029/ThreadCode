@@ -49,7 +49,8 @@ function Header(){
             <button 
             className="text-secondary-text text-[18px] bg-amber-800 hover:scale-[1.05] px-2 py-1 mr-2 rounded-sm cursor-pointer transition-all duration-300 ease-in-out"
             onClick={async () => {
-                await logout(); 
+                const confirm = window.confirm("Do you want to Logout ?");
+                if(confirm){await logout();}else{return} 
                 navigate("/")
               }}>
               Logout
