@@ -1,30 +1,39 @@
-async function handleSubmit(e){
-    e.preventDefault();
-    setErrMsg("");
-    setStatus("submitting");
+import { nanoid } from 'nanoid';
+import { useState, useEffect } from 'react';
+import * as Y from 'yjs';
+import { HocuspocusProvider } from '@hocuspocus/provider';
 
-    try{
-      const res = await fetch(`${API_URL}/api/auth/login`, {
-        method : "POST",
-        headers : {"Content-Type" : "application/json" },
-        credentials: "include",
-        body : JSON.stringify({email, password})
-      });
+export function useRoom(roomId) {
+  const [ydoc, setYdoc] = useState(null);
+  const [provider, setProvider] = useState(null);
 
-      const data = await res.json();
+  useEffect(() => {
+    if (!roomId) return;
 
-      if(!res.ok) {
-        throw new Error(data.error || `Server responded with ${res.status}`);
-      }
+    const doc = new Y.Doc();
+    
+    const wsProvider = new HocuspocusProvider({
+      url: import.meta.env.VITE_WS_URL,
+      name: roomId,
+      document: doc,
+      token: localStorage.getItem('wsToken'),
+    });
 
-      localStorage.setItem('wsToken', data.sessionId);
-      setUser(data.user)
-      setStatus("success");
-      navigate("/home");
+    setYdoc(doc);
+    setProvider(wsProvider);
 
-    }
-    catch(error){
-      setStatus("error");
-      setErrMsg(error.message);
-    }
-  }
+    return () => {
+      wsProvider.destroy();
+      doc.destroy();
+    };
+  }, [roomId]);
+
+  return { ydoc, provider };
+}
+
+export function generateRoom() {
+  return {
+    roomId: nanoid(12),
+    roomName: 'untitled',
+  };
+}
