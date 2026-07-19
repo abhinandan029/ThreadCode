@@ -3,6 +3,8 @@ import{useState} from 'react'
 
 import { useAuth } from '../context/authContext';
 
+import { API_URL } from '../config.js';
+
 function Login(){
 
   const {setUser} = useAuth();
@@ -19,7 +21,7 @@ function Login(){
     setStatus("submitting");
 
     try{
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method : "POST",
         headers : {"Content-Type" : "application/json" },
         credentials: "include",

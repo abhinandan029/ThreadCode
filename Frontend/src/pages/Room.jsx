@@ -14,6 +14,8 @@ import { useAuth } from '../context/authContext';
 
 import { runCode } from '../utils/runJs.jsx';
 
+import { API_URL } from '../config.js';
+
 function Room() {
 
   const { roomId } = useParams();
@@ -59,7 +61,7 @@ function Room() {
 
     async function fetchMembers() {
       try {
-        const res = await fetch(`/api/room/${roomId}/members`, {
+        const res = await fetch(`${API_URL}/api/room/${roomId}/members`, {
           credentials: 'include',
         });
         const data = await res.json();
@@ -80,7 +82,7 @@ function Room() {
     setStatus("joining");
 
     try {
-      const res = await fetch(`/api/room/${joinInput}/access`, {
+      const res = await fetch(`${API_URL}/api/room/${joinInput}/access`, {
         credentials: 'include',
       });
 
@@ -104,7 +106,7 @@ function Room() {
     setInviteStatus("inviting");
 
     try {
-      const res = await fetch(`/api/room/${roomId}/invite`, {
+      const res = await fetch(`${API_URL}/api/room/${roomId}/invite`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

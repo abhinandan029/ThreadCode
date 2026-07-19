@@ -1,4 +1,5 @@
-import {createContext, useContext, useState, useEffect} from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
+import { API_URL } from '../config.js';
 
 const AuthContext = createContext();
 
@@ -9,19 +10,19 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     async function checkAuth() {
       try {
-        const res = await fetch('/api/auth/me', {credentials : 'include'});
-        if(res.ok){
+        const res = await fetch(`${API_URL}/api/auth/me`, { credentials: 'include' });
+        if (res.ok) {
           const data = await res.json();
           setUser(data.user);
         }
-        else{
+        else {
           setUser(null);
         }
       }
-      catch(error){
+      catch (error) {
         setUser(null);
       }
-      finally{
+      finally {
         setLoading(false);
       }
     }
@@ -29,21 +30,21 @@ export function AuthProvider({ children }) {
     checkAuth();
   }, []);
 
-  async function logout(){
-    await fetch('/api/auth/logout', {
-      method : 'POST',
-      credentials : 'include'
+  async function logout() {
+    await fetch(`${API_URL}/api/auth/logout`, {
+      method: 'POST',
+      credentials: 'include'
     })
     setUser(null)
   }
 
-  return(
-    <AuthContext.Provider value={{user, setUser, loading, logout}}>
+  return (
+    <AuthContext.Provider value={{ user, setUser, loading, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export function useAuth(){
+export function useAuth() {
   return useContext(AuthContext);
 }

@@ -4,6 +4,8 @@ import { generateRoom } from '../hooks/useRoom.jsx';
 
 import { FaRegCopy } from "react-icons/fa6";
 
+import { API_URL } from '../config.js';
+
 function Home() {
   const navigate = useNavigate();
   const [room, setRoom] = useState(null);
@@ -18,7 +20,7 @@ function Home() {
     const { roomId, roomName } = generateRoom();
 
     try {
-      const res = await fetch('/api/room', {
+      const res = await fetch(`${API_URL}/api/room`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
