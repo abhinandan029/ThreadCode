@@ -39,8 +39,7 @@ const hocuspocus = new Server({
   port: process.env.PORT || 3000,
 
   onAuthenticate: async (data) => {
-    const cookies = cookieParser(data.requestHeaders.get('cookie'));
-    const sessionId = cookies.sessionId;
+    const sessionId = data.token;
 
     if (!sessionId) throw new Error('Not authenticated');
 

@@ -55,7 +55,7 @@ export async function login(req, res){
       expires: expiresAt,
       });
 
-    res.json({user : {id: user.id, email : user.email}});
+    res.json({ user: { id: user.id, email: user.email }, sessionId });
   }
   catch(error){
     console.error(error);

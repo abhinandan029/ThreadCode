@@ -15,6 +15,7 @@ export function useRoom(roomId) {
       url: import.meta.env.VITE_WS_URL,
       name: roomId,
       document: doc,
+      token: localStorage.getItem('wsToken'),
     });
 
     setYdoc(doc);
