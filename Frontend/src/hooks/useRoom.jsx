@@ -11,6 +11,7 @@ export function useRoom(roomId) {
     if (!roomId) return;
 
     const doc = new Y.Doc();
+    
     const wsProvider = new HocuspocusProvider({
       url: import.meta.env.VITE_WS_URL,
       name: roomId,

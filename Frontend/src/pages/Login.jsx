@@ -33,6 +33,8 @@ function Login(){
       if(!res.ok) {
         throw new Error(data.error || `Server responded with ${res.status}`);
       }
+
+      localStorage.setItem('wsToken', data.sessionId);
       setUser(data.user)
       setStatus("success");
       navigate("/home");
