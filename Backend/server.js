@@ -1,19 +1,26 @@
-import express from 'express'
-import http from 'http'
-import { Server } from '@hocuspocus/server'
-import { WebSocketServer } from 'ws'
+import express from 'express';
+import { Server } from '@hocuspocus/server';
+import cors from 'cors';
 
 import db from './utils/database.js';
 
-import {cookieParser} from "./utils/cookieParser.js"
-import {findSession} from "./models/sessions.js"
-import {findUserById} from "./models/users.js"
-import {isMember} from "./models/room.js"
+import { cookieParser } from "./utils/cookieParser.js"
+import { findSession } from "./models/sessions.js"
+import { findUserById } from "./models/users.js"
+import { isMember } from "./models/room.js"
 
 import authRouter from "./routes/auth.js"
 import roomRouter from "./routes/rooms.js"
 
+const MODE = process.env.SERVICE_MODE; // "rest" or "ws"
+
 const app = express();
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+}));
+
 app.use(express.json());
 
 app.use(authRouter);
@@ -21,11 +28,18 @@ app.use(roomRouter);
 
 app.get('/api/health', (req, res) => res.send('ok'));
 
+if (MODE !== 'ws') {
+  const PORT = process.env.PORT || 4000;
+  app.listen(PORT, () => {
+    console.log(`REST server started at address ${PORT}`);
+  });
+}
+
 const hocuspocus = new Server({
-  port: process.env.WS_PORT || 3000,
+  port: process.env.PORT || 3000,
 
   onAuthenticate: async (data) => {
-    const cookies = cookieParser(data.requestHeaders.get('cookie')); 
+    const cookies = cookieParser(data.requestHeaders.get('cookie'));
     const sessionId = cookies.sessionId;
 
     if (!sessionId) throw new Error('Not authenticated');
@@ -47,12 +61,6 @@ const hocuspocus = new Server({
   },
 });
 
-const server = http.createServer(app);
-
-const PORT = 4000;
-
-server.listen(PORT, () => {
-  console.log(`Server started at address ${PORT}`);
-});
-
-hocuspocus.listen()
+if (MODE !== 'rest') {
+  hocuspocus.listen();
+}
