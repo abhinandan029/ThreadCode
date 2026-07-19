@@ -49,11 +49,11 @@ export async function login(req, res){
     const {sessionId, expiresAt} = await createSession(user.id);
 
     res.cookie('sessionId', sessionId, {
-      httpOnly : true,
-      secure : process.env.NODE_ENV === 'production',
-      sameSite : "lax",
-      expires : expiresAt,
-    });
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      expires: expiresAt,
+      });
 
     res.json({user : {id: user.id, email : user.email}});
   }
@@ -66,10 +66,14 @@ export async function login(req, res){
 export async function logout(req, res){
   const cookies = cookieParser(req.headers.cookie);
 
-  if(cookies.sessionId) await deleteSession(cookies.sessionId);
+  if (cookies.sessionId) await deleteSession(cookies.sessionId);
 
-  res.clearCookie('sessionId');
-  res.json({ message : "Logged out"});
+  res.clearCookie('sessionId', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  });
+  res.json({ message: "Logged out" });
 }
 
 export async function me(req, res){
