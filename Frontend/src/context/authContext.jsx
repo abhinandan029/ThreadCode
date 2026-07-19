@@ -28,7 +28,6 @@ export function AuthProvider({ children }) {
     }
 
     checkAuth();
-    localStorage.setItem('wsToken', data.sessionId);
   }, []);
 
   async function logout() {
