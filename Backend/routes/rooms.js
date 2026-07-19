@@ -1,5 +1,5 @@
 import express from 'express'
-import { verifySession } from  "../middlewares/verifysession.js"
+import { verifySession } from  "../middlewares/verifySession.js"
 
 import {createRoomHandler, inviteToRoom, getRoomMembers, checkRoomAccess, leaveRoom } from "../controllers/roomController.js"
 
