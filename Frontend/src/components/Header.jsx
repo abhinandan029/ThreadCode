@@ -11,7 +11,9 @@ function Header(){
   const {user, loading, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const {roomId} = useParams();
+
+  const roomMatch = location.pathname.match(/^\/room\/(.+)$/);
+  const roomId = roomMatch ? roomMatch[1] : null;
 
   return (
     <div className="flex width-full items-center justify-between px-1 bg-primary-bg text-[30px]">
@@ -25,13 +27,23 @@ function Header(){
           <div className ="flex justify-between ml-10 mt-1">
             <button 
             className={location.pathname === "/home" ? "active-page" : "inactive-page"}
-            onClick={() => navigate("/home")}>
+            onClick={() => {
+                if(roomId){
+                  const confirm = window.confirm("Do you want to leave the room ?")
+                  if (!confirm) return;
+                }
+                navigate("/home")
+                 
+              }}>
               Home
             </button>
 
             <button 
-              className={location.pathname === "/room" ? "active-page" : "inactive-page"}
-              onClick={() => navigate(roomId ? `./room/${roomId}` : "/room")}>
+              className={roomMatch || location.pathname === "/room" ? "active-page" : "inactive-page"}
+              onClick={() => {
+                navigate(roomId ? `./room/${roomId}` : "/room")
+              }}
+              >
                Room
             </button>
           </div>
@@ -45,6 +57,8 @@ function Header(){
           !loading && user && (
           <>
             <button className="text-xl text-secondary-text cursor-pointer mr-5 hover:scale-[1.1] hover:text-white transition-all duration-300 ease-in-out"><FaBell /></button>
+
+            <span className="text-secondary-text text-[16px] mr-4 bg-black/50 p-2 rounded-md">{"USER EMAIL : "}{user.email}</span>
 
             <button 
             className="text-secondary-text text-[18px] bg-amber-800 hover:scale-[1.05] px-2 py-1 mr-2 rounded-sm cursor-pointer transition-all duration-300 ease-in-out"

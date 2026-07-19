@@ -8,10 +8,36 @@ function Home() {
   const navigate = useNavigate();
   const [room, setRoom] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState("idle");
+  const [errMsg, setErrMsg] = useState("");
 
-  function handleCreate() {
-    setRoom(generateRoom());
-    setCopied(false);
+  async function handleCreate() {
+    setErrMsg("");
+    setStatus("creating");
+
+    const { roomId, roomName } = generateRoom();
+
+    try {
+      const res = await fetch('/api/room', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ roomId, name: roomName }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || `Server responded with ${res.status}`);
+      }
+
+      setRoom({ roomId, roomName });
+      setCopied(false);
+      setStatus("idle");
+    } catch (error) {
+      setStatus("error");
+      setErrMsg(error.message);
+    }
   }
 
   function copyCode() {
@@ -25,27 +51,32 @@ function Home() {
       <p className="text-secondary-text text-[20px] mb-5"> Create a room and share the link to start collaborating</p>
 
       <div className="flex justify-between">
-        <button 
-        className="m-5 bg-amber-700 px-2 py-1 text-[28px] rounded-md hover:scale-[1.05] transition-all duration-300 ease-in-out cursor-pointer"
-        onClick={() => handleCreate()}>
-          Create Room
+        <button
+          className="m-5 bg-amber-700 px-2 py-1 text-[28px] rounded-md hover:scale-[1.05] transition-all duration-300 ease-in-out cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={() => handleCreate()}
+          disabled={status === "creating"}>
+          {status === "creating" ? "Creating..." : "Create Room"}
         </button>
 
-        <button 
-        className="m-5 border border-amber-500 px-2 py-1 text-[28px] rounded-md text-amber-500 hover:scale-[1.05] transition-all duration-300 ease-in-out cursor-pointer"
-        onClick={() => navigate(room === null ? "/room" : `/room/${room.roomId}`)}>
+        <button
+          className="m-5 border border-amber-500 px-2 py-1 text-[28px] rounded-md text-amber-500 hover:scale-[1.05] transition-all duration-300 ease-in-out cursor-pointer"
+          onClick={() => navigate(room === null ? "/room" : `/room/${room.roomId}`)}>
           Join Room
         </button>
 
       </div>
 
+      {status === "error" && (
+        <p className="text-red-400 text-sm mb-3">{errMsg}</p>
+      )}
+
       {
         room ?
         <div className="flex flex-col items-center justify-center">
-          <div 
+          <div
           className="bg-black/20  border-black px-5 py-2  rounded-lg m-5 transition-all duration-300 ease-in-out flex items-center justify-between mb-0">
             <p className="text-white text-[22px]">Room ID : {room.roomId}</p>
-            <FaRegCopy 
+            <FaRegCopy
               title="copy code"
               className="ml-10 bg-ternary-bg p-1 rounded-sm flex items-center text-white scale-[2] hover:scale-[2.1] cursor-pointer transition-all duration-300 ease-in-out"
               onClick={() => copyCode()}
@@ -53,12 +84,10 @@ function Home() {
           </div>
           {copied ? <p className="text-white transition-all duration-300 ease-in-out  ">copied</p> : ""}
         </div> :
-        
+
         <div></div>
       }
 
-      
-      
     </div>
   );
 }
