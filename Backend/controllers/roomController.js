@@ -1,20 +1,20 @@
-import { createRoom, findRoomById, isMember, addMember, listMembers } from "../models/room.js"
+import { createRoom, findRoomById, isMember, addMember, listMembers, removeMember, transferOwnership, findNextOwnerCandidate } from "../models/room.js"
 import {findUserByEmail} from "../models/users.js"
 
 export async function createRoomHandler(req, res){
   const {roomId, name} = req.body;
   if(!roomId){
     return res.status(400).json({error : "Room ID is required"});
-
-    try {
-      await createRoom(roomId, req.user.id, name);
-      res.status(201).json({message : "Room Created"});
-    }
-    catch(error){
-      console.error(error);
-      res.status(500).json({error : "Failed to create Room!"});
-    }
   } 
+
+  try {
+    await createRoom(roomId, req.user.id, name);
+    res.status(201).json({message : "Room Created"});
+  }
+  catch(error){
+    console.error(error);
+    res.status(500).json({error : "Failed to create Room!"});
+  }
 }
 
 export async function inviteToRoom(req, res){
@@ -72,5 +72,31 @@ export async function checkRoomAccess(req, res){
   catch(error){
     console.error(error);
     res.status(500).json({error : "Failed to check room access."});
+  }
+}
+
+export async function leaveRoom(req, res){
+  const { roomId } = req.params;
+
+  try {
+    const room = await findRoomById(roomId);
+    if (!room) return res.status(404).json({ error: "Room Not Found" });
+
+    if (room.owner_id === req.user.id) {
+      const candidate = await findNextOwnerCandidate(roomId, req.user.id);
+
+      if (!candidate) {
+        return res.status(400).json({ error: "You're the only member — invite someone before leaving, or the room will have no owner." });
+      }
+
+      await transferOwnership(roomId, candidate.user_id);
+    }
+
+    await removeMember(roomId, req.user.id);
+    res.json({ message: "Left the room" });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to leave room" });
   }
 }

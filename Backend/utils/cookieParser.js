@@ -1,7 +1,7 @@
 
 export function cookieParser(cookieHeader){
   const cookies = {};
-  console.log(cookieHeader);
+  // console.log(cookieHeader);
   if (!cookieHeader) return cookies ;
 
   cookieHeader.split(';').forEach((pair) => {

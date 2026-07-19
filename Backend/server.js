@@ -22,28 +22,22 @@ app.use(roomRouter);
 app.get('/api/health', (req, res) => res.send('ok'));
 
 const hocuspocus = new Server({
+  port: process.env.WS_PORT || 3000,
+
   onAuthenticate: async (data) => {
-    const cookies = cookieParser(data.requestHeaders.cookie);
+    const cookies = cookieParser(data.requestHeaders.get('cookie')); 
     const sessionId = cookies.sessionId;
 
-    if(!sessionId){
-      throw new Error('Not authenticated');
-    }
+    if (!sessionId) throw new Error('Not authenticated');
 
     const session = await findSession(sessionId);
-    if(!session) {
-      throw new Error('Session expired')
-    }
+    if (!session) throw new Error('Session expired');
 
     const user = await findUserById(session.user_id);
-    if(!user){
-      throw new Error('User Not Found');
-    }
+    if (!user) throw new Error('User Not Found');
 
     const allowed = await isMember(data.documentName, user.id);
-    if(!allowed){
-      throw new Error('Not a member of this room.')
-    }
+    if (!allowed) throw new Error('Not a member of this room.');
 
     return { user };
   },
@@ -51,20 +45,14 @@ const hocuspocus = new Server({
   onConnect: async (data) => {
     console.log(`Client connected to room ${data.documentName}`);
   },
-
 });
 
 const server = http.createServer(app);
-const wss = new WebSocketServer({ noServer: true })
 
-server.on('upgrade', (req, socket, head) => {
-  wss.handleUpgrade(req, socket, head, (ws) => {
-    hocuspocus.handleConnection(ws, req);
-  });
-});
-
-const PORT = 3000;
+const PORT = 4000;
 
 server.listen(PORT, () => {
   console.log(`Server started at address ${PORT}`);
 });
+
+hocuspocus.listen()
